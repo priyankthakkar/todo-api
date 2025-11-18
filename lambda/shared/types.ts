@@ -1,10 +1,12 @@
+export type Priority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
 export interface Todo {
   id: string;
   title: string;
   description?: string;
   createdDate: string;
   dueDate?: string;
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  priority: Priority;
   tags: string[];
   userId: string;
   completed: boolean;
@@ -15,7 +17,7 @@ export interface CreateTodoInput {
   title: string;
   description?: string;
   dueDate?: string;
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  priority: Priority;
   tags?: string[];
 }
 
@@ -24,7 +26,7 @@ export interface UpdateTodoInput {
   title?: string;
   description?: string;
   dueDate?: string;
-  priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  priority?: Priority;
 }
 
 export interface AppSyncResolveEvent {
