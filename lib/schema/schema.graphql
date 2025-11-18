@@ -1,0 +1,91 @@
+type Todo {
+  id: ID!
+  title: String!
+  description: String
+  createdDate: AWSDateTime!
+  dueDate: AWSDateTime
+  priority: Priority!
+  tags: [String!]
+  userId: String!
+  completed: Boolean!
+  updatedDate: AWSDateTime!
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+input CreateTodoInput {
+  title: String!
+  description: String
+  dueDate: AWSDateTime
+  priority: Priority!
+  tags: [String!]
+}
+
+input UpdateTodoInput {
+  id: ID!
+  title: String
+  description: String
+  dueDate: AWSDateTime
+  priority: Priority
+  tags: [String!]
+  completed: Boolean
+}
+
+input TodoFilterInput {
+  priority: Priority
+  completed: Boolean
+  startDate: AWSDateTime
+  endDate: AWSDateTime
+  tags: [String!]
+}
+
+type TodoReport {
+  totalTodos: Int!
+  completedTodos: Int!
+  pendingTodos: Int!
+  byPriority: PriorityStats!
+  upcomingDeadlines: [Todo!]!
+  overdueTodos: [Todo!]!
+}
+
+type PriorityStats {
+  low: Int!
+  medium: Int!
+  high: Int!
+  urgent: Int!
+}
+
+type Query {
+  getTodo(id: ID!): Todo
+  listTodos(
+    filter: TodoFilterInput
+    limit: Int
+    nextToken: String
+  ): TodoConnection!
+  getUserTodos(userId: String!): [Todo!]!
+  generateReport(startDate: AWSDateTime, endDate: AWSDateTime): TodoReport!
+}
+
+type TodoConnection {
+  items: [Todo!]!
+  nextToken: String
+  total: Int!
+}
+
+type Mutation {
+  createTodo(input: CreateTodoInput!): Todo!
+  updateTodo(input: UpdateTodoInput!): Todo!
+  deleteTodo(id: ID!): Boolean!
+  batchDeleteTodos(ids: [ID!]!): Int!
+}
+
+type Subscription {
+  onTodoCreated(userId: string!): Todo @aws_subscribe(mutations: ["createTodo"])
+  onTodoUpdated(userId: String!): Todo @aws_subscribe(mutations: ["updateTodo"])
+  onTodoDeleted(userId: string!): ID @aws_subscribe(mutations: ["deleteTodo"])
+}
