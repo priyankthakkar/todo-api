@@ -29,7 +29,7 @@ export interface UpdateTodoInput {
   priority?: Priority;
 }
 
-export interface AppSyncResolveEvent {
+export interface AppSyncResolverEvent {
   info: {
     fieldName: string;
     parentTypeName: string;
